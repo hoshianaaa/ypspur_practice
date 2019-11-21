@@ -1,0 +1,1 @@
+ypspur-coordinator -p /usr/local/share/robot-params/icart-mini.param -d /dev/sensors/icart-mini -o
