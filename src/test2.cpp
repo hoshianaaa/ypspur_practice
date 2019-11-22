@@ -1,4 +1,6 @@
 #include <ros/ros.h>
+#include <tf/transform_broadcaster.h>
+#include <boost/thread/thread.hpp>
 
 extern "C"{
   #include <ypspur.h>
@@ -23,12 +25,25 @@ int move2point(double x, double y){
   return 1;
 }
 
+void do_stuff(int* publish_rate)
+{
+  ros::Rate loop_rate(*publish_rate);
+  while (ros::ok())
+  {
+    std::cout << "test" << std::endl;
+    loop_rate.sleep();
+  }
+}
+
 int main(int argc, char **argv)
 {
 
-  ros::init(argc, argv, "test1");
+  ros::init(argc, argv, "test2");
   ros::NodeHandle nh;
-  
+
+  int rate_b = 1;
+  boost::thread thread_b(do_stuff, &rate_b);  
+/*
   Spur_init();
 
   YPSpur_set_vel(0.5);
@@ -45,9 +60,22 @@ int main(int argc, char **argv)
   //Spur_line_GL( 0, 0, 0);
   //while( !Spur_near_pos_GL( 0.5, 0, 0.1))usleep(10000);
   YPSpur_freeze();
+*/
+  static tf::TransformBroadcaster br;
+  tf::Transform transform;
+  transform.setOrigin( tf::Vector3(0.0, 0.0, 0.0) );
+  tf::Quaternion q;
+  q.setRPY(0, 0, 1.4);
+  transform.setRotation(q);
+  ros::Rate rate(1);
 
   double x, y, t;
   while(ros::ok()){
+
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "base_link"));
+    rate.sleep();
+    
+/*
     Spur_get_pos_GL(&x, &y, &t);
     std::cout << "GL:" << x << "," << y << "," << t << std::endl;
     Spur_get_pos_LC(&x, &y, &t);
@@ -58,6 +86,7 @@ int main(int argc, char **argv)
     std::cout << "BL:" << x << "," << y << "," << t << std::endl;
     std::cout << std::endl;
     usleep(1000000);
+*/
   }
   return 0;
 }
