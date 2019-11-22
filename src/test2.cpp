@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
 #include <boost/thread/thread.hpp>
 
 extern "C"{
@@ -67,12 +68,33 @@ int main(int argc, char **argv)
   tf::Quaternion q;
   q.setRPY(0, 0, 1.4);
   transform.setRotation(q);
+
+  tf::TransformListener listener;
   ros::Rate rate(1);
 
   double x, y, t;
   while(ros::ok()){
 
     br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "base_link"));
+
+    tf::StampedTransform s_transform;
+    try{
+      listener.lookupTransform("/map", "/base_link",  
+                               ros::Time(0), s_transform);
+    }
+    catch (tf::TransformException ex){
+      ROS_ERROR("%s",ex.what());
+      ros::Duration(1.0).sleep();
+    } 
+    
+    std::cout << "trans x:" << s_transform.getOrigin().x() << std::endl;
+    std::cout << "trans y:" << s_transform.getOrigin().y() << std::endl;
+
+    double roll, pitch, yaw;
+    tf::Matrix3x3(s_transform.getRotation()).getRPY(roll, pitch, yaw);
+    std::cout << "t:" << yaw << std::endl << std::endl << std::endl;
+
+
     rate.sleep();
     
 /*

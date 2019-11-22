@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="robot_name"    default="alpha"/>
+  <arg name="map_file"      default="$(find orne_navigation_executor)/maps/mymap"/>
+
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file).yaml"/>
+
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <rosparam file="$(find ypspur_practice)/params/localization_params.yaml" command="load"/>
+    <rosparam file="$(find orne_navigation_executor)/param/localization_params_$(arg robot_name).yaml" command="load"/>
+  </node>
+</launch>

@@ -222,3 +222,5 @@ target_link_libraries(test2
     ${catkin_LIBRARIES}
     ${YPSPUR_LIBRARIES}
 )
+
+
