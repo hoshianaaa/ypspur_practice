@@ -2,7 +2,7 @@
 
 <launch>
   <arg name="robot_name"    default="alpha"/>
-  <arg name="map_file"      default="$(find orne_navigation_executor)/maps/mymap"/>
+  <arg name="map_file"      default="$(find ypspur_practice)/map/3_kai_small"/>
 
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file).yaml"/>
 
@@ -10,4 +10,5 @@
     <rosparam file="$(find ypspur_practice)/params/localization_params.yaml" command="load"/>
     <rosparam file="$(find orne_navigation_executor)/param/localization_params_$(arg robot_name).yaml" command="load"/>
   </node>
+
 </launch>

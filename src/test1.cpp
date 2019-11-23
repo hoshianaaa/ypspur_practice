@@ -38,13 +38,14 @@ int main(int argc, char **argv)
 
   Spur_set_pos_GL( 0, 0, 0);
   YPSpur_unfreeze();
-  move2point(3.0,0.0); 
-  Spur_set_pos_GL( 3.0, 0.3, 0.2);
-  move2point(6.0,0.0); 
-  move2point(6.0,-5.0); 
+
+	Spur_spin_GL(-M_PI/2);
+	usleep(10000000);
+  Spur_set_pos_GL( 0, 0, 0);
   //Spur_line_GL( 0, 0, 0);
   //while( !Spur_near_pos_GL( 0.5, 0, 0.1))usleep(10000);
-  YPSpur_freeze();
+
+  //YPSpur_freeze();
 
   double x, y, t;
   while(ros::ok()){

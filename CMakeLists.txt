@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   controller_manager
   hardware_interface
   roscpp
+  std_msgs
+	geometry_msgs
   tf
 )
 
@@ -219,6 +221,60 @@ target_link_libraries(test1
 
 add_executable(test2 src/test2.cpp)
 target_link_libraries(test2 
+    ${catkin_LIBRARIES}
+    ${YPSPUR_LIBRARIES}
+)
+
+add_executable(test3 src/test3.cpp)
+target_link_libraries(test3 
+    ${catkin_LIBRARIES}
+    ${YPSPUR_LIBRARIES}
+)
+
+add_executable(test4 src/test4.cpp)
+target_link_libraries(test4 
+    ${catkin_LIBRARIES}
+    ${YPSPUR_LIBRARIES}
+)
+
+add_executable(spur_line src/spur_line.cpp)
+target_link_libraries(spur_line
+    ${catkin_LIBRARIES}
+    ${YPSPUR_LIBRARIES}
+)
+
+add_executable(spur_circle src/spur_circle.cpp)
+target_link_libraries(spur_circle
+    ${catkin_LIBRARIES}
+    ${YPSPUR_LIBRARIES}
+)
+
+add_executable(spur_line_stop src/spur_line_stop.cpp)
+target_link_libraries(spur_line_stop
+    ${catkin_LIBRARIES}
+    ${YPSPUR_LIBRARIES}
+)
+
+add_executable(spur_near_pos src/spur_near_pos.cpp)
+target_link_libraries(spur_near_pos
+    ${catkin_LIBRARIES}
+    ${YPSPUR_LIBRARIES}
+)
+
+add_executable(spur_near_ang src/spur_near_ang.cpp)
+target_link_libraries(spur_near_ang
+    ${catkin_LIBRARIES}
+    ${YPSPUR_LIBRARIES}
+)
+
+add_executable(spur_over_line src/spur_over_line.cpp)
+target_link_libraries(spur_over_line
+    ${catkin_LIBRARIES}
+    ${YPSPUR_LIBRARIES}
+)
+
+add_executable(spur_wheel_vel src/spur_wheel_vel.cpp)
+target_link_libraries(spur_wheel_vel
     ${catkin_LIBRARIES}
     ${YPSPUR_LIBRARIES}
 )

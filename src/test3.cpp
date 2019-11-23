@@ -37,12 +37,12 @@ void tf_broad(int* publish_rate)
 
     // broad cast
     Spur_get_pos_BS(&x, &y, &yaw);
-    std::cout << "tf broad thread" << std::endl;
-    std::cout << "x:" << x << " y:" << y << " yaw:" << yaw << std::endl;
+    //std::cout << "tf broad thread" << std::endl;
+    //std::cout << "x:" << x << " y:" << y << " yaw:" << yaw << std::endl << std::endl;
     tf::Transform transform;
     transform.setOrigin( tf::Vector3(x, -y, 0.0) );
     tf::Quaternion q;
-    q.setRPY(0, 0, yaw);
+    q.setRPY(0, 0, -yaw);
     transform.setRotation(q);
     br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "base_link"));
 
@@ -50,11 +50,14 @@ void tf_broad(int* publish_rate)
   }
 }
 
-void tf_listen(int* publish_rate)
+void command(int* publish_rate)
 {
   ros::Rate loop_rate(*publish_rate);
-  while (ros::ok()) {
-	}
+	while (ros::ok())
+		{
+			std::cout << "command thread" << std::endl;
+      loop_rate.sleep();
+		}
 }
 
 int main(int argc, char **argv)
@@ -64,18 +67,20 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
 
   int tf_broad_rate = 10;
-  int tf_listen_rate = 1;
+  int command_rate = 1;
   boost::thread tf_broad_thread(tf_broad, &tf_broad_rate);  
-  boost::thread tf_listen_thread(tf_listen, &tf_listen_rate);  
+  boost::thread command_thread(command, &command_rate);  
 
   Spur_init();
 
-/*
   YPSpur_set_vel(0.5);
   YPSpur_set_angvel(1.0);
   YPSpur_set_accel(1.0);
   YPSpur_set_angaccel(2.0);
 
+  Spur_spin_GL(-M_PI/2);
+  //Spur_line_GL(0.0, 0.0, 0.0);
+/*
   Spur_set_pos_GL( 0, 0, 0);
   YPSpur_unfreeze();
   move2point(3.0,0.0); 
@@ -87,18 +92,18 @@ int main(int argc, char **argv)
   YPSpur_freeze();
 */
 
-  tf::TransformListener listener;
-  ros::Rate rate(1);
+  ros::Rate rate(5);
 
   double x, y, z;
   double roll, pitch, yaw;
-  while(ros::ok()){
 
-    // listen
+  tf::TransformListener listener;
+
+  while(ros::ok()){
     tf::StampedTransform transform;
     try{
-      listener.lookupTransform("/map", "/base_link",  
-                               ros::Time(0), transform);
+			//listener.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(10.0) );
+      listener.lookupTransform("/map", "/base_link", ros::Time(0), transform);
 
 			double x = transform.getOrigin().x();
 			double y = transform.getOrigin().y();
@@ -111,8 +116,7 @@ int main(int argc, char **argv)
       ROS_ERROR("%s",ex.what());
       ros::Duration(1.0).sleep();
     } 
-    
-    
+
     Spur_get_pos_GL(&x, &y, &yaw);
     std::cout << "GL:" << x << "," << y << "," << yaw << std::endl;
     Spur_get_pos_LC(&x, &y, &yaw);
