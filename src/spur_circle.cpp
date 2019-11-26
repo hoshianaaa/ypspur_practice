@@ -37,17 +37,9 @@ int main(int argc, char **argv)
   YPSpur_set_angaccel(2.0);
 
   Spur_set_pos_GL( 0, 0, 0);
-  YPSpur_unfreeze();
 
-	//Spur_spin_GL(-M_PI/2);
-  Spur_set_pos_GL( 0, 1, 0);
-  Spur_circle_GL( 0, 0, 2.0);
-  while( !Spur_near_pos_GL( 5.0, 0, 0.1))usleep(10000);
-
-  YPSpur_freeze();
-
-  double x, y, t;
   while(ros::ok()){
+	Spur_circle_GL( 0, 0, 1.0);
   }
   return 0;
 }
